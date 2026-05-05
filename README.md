@@ -1,8 +1,10 @@
 # PhD Applicant
 
+**🌐 Live: [phd-applicant.vercel.app](https://phd-applicant.vercel.app)**
+
 A full-stack web app to browse, track, and auto-submit PhD applications — built with Next.js, Prisma, and MongoDB. Includes a Playwright-powered automation service that fills and submits application portals on your behalf.
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js) ![MongoDB](https://img.shields.io/badge/MongoDB-7-green?logo=mongodb) ![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?logo=prisma) ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js) ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb) ![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?logo=prisma) ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python) ![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)
 
 ---
 

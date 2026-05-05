@@ -2,23 +2,51 @@
 
 **🌐 Live: [phd-applicant.vercel.app](https://phd-applicant.vercel.app)**
 
-A full-stack web app to browse, track, and auto-submit PhD applications — built with Next.js, Prisma, and MongoDB. Includes a Playwright-powered automation service that fills and submits application portals on your behalf.
+An **Agentic AI-powered** platform to browse, track, and auto-submit PhD applications with a single click — built with Next.js, MongoDB Atlas, and Claude AI. The AI agent reads your profile and documents, navigates each university's application portal, fills every form field, uploads your files, and submits — autonomously, end to end.
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js) ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb) ![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?logo=prisma) ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python) ![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js) ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb) ![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?logo=prisma) ![Claude AI](https://img.shields.io/badge/Powered%20by-Claude%20AI-blueviolet?logo=anthropic) ![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)
 
 ![PhD Applicant Dashboard](docs/screenshot.png)
 
 ---
 
+## Agentic AI — 1-Click Auto-Apply
+
+> Powered by **Claude AI (Anthropic)**
+
+Most PhD applicants spend weeks manually copying the same information across dozens of portals. This platform eliminates that entirely.
+
+When you click **Auto-Apply**, a Claude-powered AI agent takes over:
+
+1. **Reads your profile** — name, GPA, research experience, test scores, interests
+2. **Loads your documents** — CV, transcripts, SOP, letters of recommendation
+3. **Opens the application portal** — navigates to the university's system autonomously
+4. **Fills every form field** — maps your profile data to each field intelligently, handling different field names and formats across portals
+5. **Uploads your files** — attaches the right documents to the right upload slots
+6. **Submits the application** — confirms submission and updates your tracker
+
+The agent supports all major portal types used by top universities:
+
+| Portal | Example Universities |
+|---|---|
+| ApplyYourself | MIT, Stanford, Berkeley, Cornell |
+| Slate | CMU, Northeastern |
+| CollegeNET | Illinois, Brown |
+| Custom / Generic | Oxford, ETH Zurich, Toronto, and all others |
+
+No more copy-pasting. No more forgetting fields. Apply to 50 programs with the same effort as one.
+
+---
+
 ## Features
 
-- **350+ PhD programs** across top US and international universities, pre-seeded and filterable by research area, country, funding, and deadline
-- **Profile builder** — fill once, auto-filled into every application form
-- **Document vault** — upload CV, transcripts, SOP, letters of recommendation, and test scores; stored persistently in MongoDB
+- **1-click Auto-Apply** — Claude AI agent autonomously fills and submits applications on your behalf
+- **350+ PhD programs** across top US and international universities, filterable by research area, country, funding, and deadline
+- **Profile builder** — fill once, the AI agent uses it to auto-fill every application
+- **Document vault** — upload CV, transcripts, SOP, and letters of recommendation; the agent attaches them automatically
 - **Statements editor** — write and version your Statement of Purpose, personal statement, diversity essay, and research statement
-- **Application tracker** — kanban-style status board (Saved → Submitted → Interview → Decision)
-- **Auto-Apply engine** — Playwright automation that opens the portal, logs in, fills forms, uploads documents, and submits; supports ApplyYourself, CollegeNET, Slate, and generic portals
-- **Demo mode** — simulates the full submission flow without Playwright when the automation service is offline
+- **Application tracker** — full status board (Saved → Submitted → Interview → Decision)
+- **Demo mode** — simulates the full AI submission flow so you can explore the UX without connecting the agent
 
 ---
 
@@ -26,10 +54,12 @@ A full-stack web app to browse, track, and auto-submit PhD applications — buil
 
 | Layer | Technology |
 |---|---|
-| Frontend | Next.js 15, React 19, Tailwind CSS, shadcn/ui |
-| Database | MongoDB (via Docker) + Prisma ORM |
+| Frontend | Next.js 16, React 19, Tailwind CSS, shadcn/ui |
+| Database | MongoDB Atlas + Prisma ORM |
+| AI Agent | Claude AI (Anthropic) — agentic form filling & submission |
 | Automation | Python, FastAPI, Playwright |
-| File storage | Local filesystem (`public/docs/`) |
+| File storage | MongoDB + local `public/docs/` |
+| Auth | NextAuth.js — credentials-based, DB-only user management |
 
 ---
 
@@ -115,13 +145,14 @@ This installs Python dependencies, Playwright browsers, and starts the FastAPI s
 
 ## Application Flow
 
-1. Browse programs → filter by area, country, funding
-2. Save programs you're interested in
-3. Complete your profile (used to auto-fill forms)
-4. Upload required documents (CV, transcript, SOP, LOR)
-5. Write your statements
-6. Go to **Applications** → click **Auto-Apply**
-7. Track status through to decision
+1. Browse 350+ programs → filter by research area, country, funding
+2. Save programs you want to apply to
+3. Complete your profile — the Claude AI agent reads this to fill forms
+4. Upload your documents — CV, transcripts, SOP, LOR
+5. Write your statements — SOP, personal statement, diversity essay
+6. Go to **Applications** → click **Auto-Apply** (1 click)
+7. Claude AI takes over — navigates the portal, fills forms, uploads docs, submits
+8. Track status from Submitted → Interview → Decision
 
 ---
 

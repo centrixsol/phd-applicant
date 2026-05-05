@@ -1,0 +1,128 @@
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+const extras = [
+  ["Georgia Institute of Technology","PhD in Human-Computer Interaction (AI)","HCI",32000,"December 15",["Human-AI Interaction","Accessible AI","Affective Computing"],"https://www.cc.gatech.edu/degree-programs/phd-human-centered-computing"],
+  ["University of California, Berkeley","PhD in Electrical Engineering (ML/AI)","EECS",40000,"December 15",["ML Hardware","Edge AI","Communications ML"],"https://apply.grad.berkeley.edu/apply/"],
+  ["University of Michigan","PhD in Statistics (ML)","Statistics",29000,"December 15",["Statistical ML","Bayesian AI","Causal Inference"],"https://lsa.umich.edu/stats/phd.html"],
+  ["University of Texas at Austin","PhD in Data Science (ML)","Data Science",28000,"December 15",["Data Science AI","ML Engineering","Big Data ML"],"https://www.ischool.utexas.edu/research/doctoral"],
+  ["Cornell University","PhD in Statistics (ML)","Statistics",36000,"December 15",["Statistical ML","Bayesian Methods","Causal AI"],"https://stat.cornell.edu/academics/phd"],
+  ["Johns Hopkins University","PhD in Applied Mathematics (ML)","Applied Math",37000,"December 15",["ML Theory","Numerical ML","Scientific AI"],"https://www.ams.jhu.edu/graduate/phd-program/"],
+  ["Duke University","PhD in Statistical Science (ML)","Statistical Science",34000,"December 15",["Statistical ML","Bayesian Learning","Genomics AI"],"https://stat.duke.edu/phd-program"],
+  ["Brown University","PhD in Data Science (ML)","Data Science",34000,"December 15",["Data Science ML","Ethical AI","Public Health AI"],"https://dsi.brown.edu/phd"],
+  ["Yale University","PhD in Applied Mathematics (ML)","Applied Math",37000,"December 15",["ML Theory","Numerical AI","Optimization"],"https://appliedmath.yale.edu/graduate-program/phd-program"],
+  ["Vanderbilt University","PhD in Biomedical Informatics (AI)","DBMI",32000,"December 15",["Healthcare AI","Clinical NLP","Medical Imaging AI"],"https://www.vumc.org/dbmi/phd-program"],
+  ["Arizona State University","PhD in Data Science (ML)","Data Science",25000,"January 15",["ML Systems","Data Mining","Knowledge Graphs"],"https://graduate.asu.edu/programs/degrees/computer-science/phd"],
+  ["University of Colorado Boulder","PhD in Applied Mathematics (ML)","Applied Math",27000,"December 15",["ML Theory","Scientific AI","Optimization"],"https://www.colorado.edu/amath/graduate/phd"],
+  ["University of Massachusetts Amherst","PhD in Applied Math (ML Theory)","Mathematics",25000,"December 15",["ML Theory","Statistical AI","Numerical ML"],"https://www.math.umass.edu/graduate/programs/doctoral-program"],
+  ["Rice University","PhD in Computational & Applied Math (ML)","CAAM",36000,"December 15",["Scientific ML","Optimization","Uncertainty Quantification"],"https://caam.rice.edu/academics/phd-program"],
+  ["Northwestern University","PhD in Applied Mathematics (ML)","Applied Math",36000,"December 15",["ML Theory","Computational AI","Stochastic ML"],"https://www.mccormick.northwestern.edu/applied-mathematics/academics/graduate/phd/"],
+  ["Ohio State University","PhD in Data Analytics (ML)","Data Analytics",22000,"December 15",["ML","Big Data AI","Data Mining"],"https://tdai.osu.edu/phd-in-data-analytics/"],
+  ["Purdue University","PhD in Data Science (ML)","Data Science",22000,"December 15",["Data Science ML","Business AI","Predictive Analytics"],"https://www.purdue.edu/data-mine/programs/graduate.html"],
+  ["Stony Brook University","PhD in Applied Mathematics (ML)","Applied Math",25000,"January 15",["Scientific ML","Numerical AI","Computational Statistics"],"https://www.math.stonybrook.edu/graduate/PhD_Applied_Math.html"],
+  ["University of Rochester","PhD in Data Science (ML)","Goergen Institute",30000,"December 15",["ML Systems","Data Science AI","Health AI"],"https://www.sas.rochester.edu/dsc/graduate/phd/"],
+  ["Northeastern University","PhD in Data Science (ML)","Khoury",34000,"December 15",["ML Systems","Responsible AI","Privacy-preserving ML"],"https://www.khoury.northeastern.edu/programs/data-science-phd/"],
+  ["Rensselaer Polytechnic Institute","PhD in Data Science (ML)","Data Science",28000,"December 31",["ML","AI","Data Science","Knowledge Graphs"],"https://www.rpi.edu/academics/graduate/ds-phd"],
+  ["University of Maryland","PhD in Applied Mathematics (ML)","Applied Math",28000,"December 15",["ML Theory","Optimization AI","Scientific ML"],"https://www.math.umd.edu/graduate/phd-program/"],
+  ["University of Maryland","PhD in Statistics (ML)","Statistics",27000,"December 15",["Statistical ML","Causal AI","Biostatistics ML"],"https://www.math.umd.edu/statistics-program/phd-program/"],
+  ["Virginia Tech","PhD in Statistics (ML)","Statistics",25000,"January 15",["Statistical ML","Bayesian AI","Spatial ML"],"https://www.stat.vt.edu/graduate/phd.html"],
+  ["Michigan State University","PhD in Statistics (ML)","Statistics",23000,"December 15",["Statistical ML","Bayesian AI","High-dimensional ML"],"https://stt.natsci.msu.edu/graduate/graduate-degree-programs/phd-statistics/"],
+  ["Indiana University Bloomington","PhD in Data Science (AI)","Data Science",22000,"December 15",["Data Science ML","NLP","Network Science"],"https://datascience.indiana.edu/programs/phd.html"],
+  ["University of Pittsburgh","PhD in Statistics (ML)","Statistics",26000,"January 15",["Statistical ML","Causal AI","Computational Statistics"],"https://www.statistics.pitt.edu/phd-statistics"],
+  ["Florida State University","PhD in Statistics (ML)","Statistics",22000,"January 15",["Statistical ML","Bayesian AI","Spatial AI"],"https://www.stat.fsu.edu/graduate-programs/phd-program"],
+  ["Ludwig Maximilian University Munich","PhD in Statistics & AI","Statistics",24000,"Rolling",["Statistical ML","Bayesian AI","Econometrics AI"],"https://www.mathematik.uni-muenchen.de/studium/promotion/index.html"],
+  ["RWTH Aachen University","PhD in Electrical Engineering (ML)","EE",24000,"Rolling",["Signal AI","ML Systems","Communications ML"],"https://www.rwth-aachen.de/go/id/bzw"],
+  ["University of Toronto","PhD in Statistics (ML)","Statistics",22000,"December 1",["Statistical ML","Bayesian AI","Causal Inference","Time Series ML"],"https://www.statistics.utoronto.ca/graduate/current-students/phd-program"],
+  ["University of Toronto","PhD in Electrical & Computer Engineering (AI)","ECE",22000,"December 1",["ML Hardware","Signal AI","Communications ML"],"https://www.ece.utoronto.ca/graduate/doctoral-programs/"],
+  ["University of British Columbia","PhD in Statistics (ML)","Statistics",20000,"December 15",["Statistical ML","Bayesian AI","Causal ML"],"https://www.stat.ubc.ca/graduate-program/graduate-programs-overview/phd-program"],
+  ["University of British Columbia","PhD in Electrical & Computer Engineering (AI)","ECE",20000,"December 15",["ML Systems","Signal AI","Communications ML"],"https://ece.ubc.ca/graduate/programs/phd/"],
+  ["McGill University","PhD in Statistics (ML)","Mathematics & Statistics",20000,"December 15",["Statistical ML","Bayesian AI","Biostatistics ML"],"https://www.mcgill.ca/mathstat/graduate/grad-phd"],
+  ["McGill University","PhD in Electrical & Computer Engineering (AI)","ECE",20000,"December 15",["Signal AI","ML Hardware","Communications ML"],"https://www.mcgill.ca/ece/graduate/doctoral-studies"],
+  ["University of Waterloo","PhD in Statistics (ML)","Statistics",20000,"December 1",["Statistical ML","Causal AI","Stochastic ML"],"https://uwaterloo.ca/statistics-and-actuarial-science/programs/phd-statistics"],
+  ["University of Waterloo","PhD in Electrical Engineering (AI)","ECE",20000,"December 1",["ML Hardware","Signal AI","Edge ML"],"https://uwaterloo.ca/electrical-computer-engineering/graduate/programs/phd"],
+  ["University of Alberta","PhD in Statistics (ML)","Mathematical Sciences",20000,"January 15",["Statistical ML","Bayesian AI","Causal Learning"],"https://www.ualberta.ca/mathematical-and-statistical-sciences/graduate-studies/programs-and-admissions/mss-phd"],
+  ["Simon Fraser University","PhD in Statistics (ML)","Statistics & Actuarial Science",18000,"January 15",["Statistical ML","Bayesian AI","Environmental ML"],"https://www.sfu.ca/stat-actsci/programs/graduate.html"],
+  ["IIT Madras","PhD in Electrical Engineering (ML)","EE",7500,"February 28",["Signal AI","ML Hardware","Communications ML"],"https://www.ee.iitm.ac.in/admissions"],
+  ["IIT Kharagpur","PhD in Electrical Engineering (ML)","EE",7500,"February 28",["Signal ML","ML Hardware","Edge AI"],"http://www.ee.iitkgp.ac.in/admission.php"],
+  ["Indian Institute of Science (IISc)","PhD in Electrical Communication Engineering (ML)","ECE",8000,"February 28",["Signal Processing ML","Communications AI","ML Systems"],"https://ece.iisc.ac.in/research-programs/"],
+  ["Indian Institute of Science (IISc)","PhD in Mathematics (ML Theory)","Mathematics",8000,"February 28",["ML Theory","Optimization","Statistical Learning Theory"],"https://math.iisc.ac.in/programs-phd.html"],
+  ["Fudan University","PhD in Data Science (ML)","Data Science",12000,"December 1",["ML","NLP","Computer Vision","Data Science"],"https://sds.fudan.edu.cn/"],
+  ["Wuhan University","PhD in Electronic Information (ML)","EI",11000,"December 1",["Signal AI","Remote Sensing ML","Communications AI"],"https://eis.whu.edu.cn/English.htm"],
+  ["Zhejiang University","PhD in Electrical Engineering (AI)","EE",13000,"December 1",["AI Chips","Signal AI","Edge Computing"],"https://www.ieee.zju.edu.cn/ieee_en/"],
+  ["Osaka University","PhD in Information Science (ML Theory)","IS",14000,"February 1",["ML Theory","Statistical AI","Probabilistic ML"],"https://www.is.osaka-u.ac.jp/en/research/phd_program/"],
+  ["Kyoto University","PhD in Electrical Engineering (AI)","EE",15000,"February 1",["ML Hardware","Signal AI","Edge Computing"],"https://www.ee.kuee.kyoto-u.ac.jp/en/research/graduateschool/"],
+  ["Tokyo Institute of Technology","PhD in Information Science (ML)","IS",14000,"February 1",["Statistical ML","Bayesian AI","Graph ML"],"https://www.titech.ac.jp/english/graduate/"],
+  ["POSTECH","PhD in Electrical Engineering (AI)","EE",16000,"December 1",["ML Hardware","Signal AI","Neuromorphic AI"],"https://ee.postech.ac.kr/"],
+  ["City University of Hong Kong","PhD in Electrical Engineering (ML)","EE",18000,"January 31",["Signal AI","ML Hardware","Edge AI"],"https://www.ee.cityu.edu.hk/research/phd_programme"],
+  ["National Tsing Hua University","PhD in Computer Science (ML)","CS",11000,"January 10",["ML","AI","Computer Vision","NLP"],"https://web.cs.nthu.edu.tw/"],
+  ["University of Science and Technology of China","PhD in Mathematics (ML)","Mathematics",11000,"December 1",["ML Theory","Optimization","Statistical Learning"],"https://math.ustc.edu.cn/"],
+  ["University of Bristol","PhD in Mathematics (ML Theory)","Mathematics",16000,"January 31",["ML Theory","Statistical Learning","Bayesian AI"],"https://www.bristol.ac.uk/maths/postgraduate/research/phd/"],
+  ["University of Warwick","PhD in Statistics (ML)","Statistics",16000,"January 31",["Statistical ML","Bayesian AI","Causal Learning"],"https://warwick.ac.uk/fac/sci/statistics/postgrad/research/phd/"],
+  ["University of Leeds","PhD in Electrical & Electronic Engineering (AI)","EEE",16000,"January 31",["Signal AI","ML Hardware","Communications ML"],"https://eps.leeds.ac.uk/electrical-engineering/doc/phd"],
+  ["University of Sheffield","PhD in Automatic Control & Systems Engineering (AI)","ACSE",16000,"January 31",["Control AI","Robotics AI","Autonomous Systems"],"https://www.sheffield.ac.uk/acse/research/postgraduate"],
+  ["University of Exeter","PhD in Mathematics (ML)","Mathematics",15000,"January 31",["ML Theory","Statistical AI","Environmental ML"],"https://www.exeter.ac.uk/study/postgraduate/maths/"],
+  ["University of Nottingham","PhD in Statistics (ML)","Mathematics/Statistics",16000,"January 31",["Statistical ML","Bayesian AI","Causal Inference"],"https://www.nottingham.ac.uk/mathematics/postgraduate-research/phd-mathematics.aspx"],
+  ["University of Southampton","PhD in Mathematical Sciences (ML)","Mathematics",16000,"January 31",["Statistical AI","Mathematical ML","Optimization"],"https://www.southampton.ac.uk/maths/postgraduate/research_degrees.page"],
+  ["University of Glasgow","PhD in Statistics (ML)","Mathematics & Statistics",16500,"January 31",["Statistical ML","Bayesian AI","Data Science"],"https://www.gla.ac.uk/schools/mathematicsstatistics/research/statistics/phd/"],
+  ["University of Bath","PhD in Statistics (ML)","Mathematical Sciences",16000,"January 31",["Statistical Learning","Bayesian AI","Causal ML"],"https://www.bath.ac.uk/guides/phd-mathematical-sciences/"],
+  ["University of Queensland","PhD in Electrical Engineering (AI)","EECS",28000,"October 31",["Signal AI","ML Hardware","Edge AI"],"https://my.uq.edu.au/programs-courses/program.html?acad_prog=8031"],
+  ["Monash University","PhD in Mathematics (ML)","Mathematics",28000,"October 31",["ML Theory","Statistical Learning","Optimization"],"https://www.monash.edu/science/schools/mathematical-sciences/graduate-research"],
+  ["University of New South Wales","PhD in Mathematics (ML)","Mathematics & Statistics",28000,"October 31",["Statistical ML","ML Theory","Causal AI"],"https://www.maths.unsw.edu.au/future-students/graduate-research"],
+  ["Australian National University","PhD in Electrical Engineering (AI)","ECEE",28000,"October 31",["Signal AI","ML Hardware","Autonomous Systems"],"https://cecs.anu.edu.au/study/phd"],
+  ["University of Melbourne","PhD in Statistics (ML)","Mathematics & Statistics",29000,"October 31",["Statistical ML","Bayesian AI","Causal Learning"],"https://ms.unimelb.edu.au/study/phd"],
+  ["University of Auckland","PhD in Statistics (ML)","Statistics",22000,"October 31",["Statistical ML","Bayesian AI","Biostatistics ML"],"https://www.auckland.ac.nz/en/science/study-with-us/statistics-and-operations-research/postgraduate/phd.html"],
+  ["Uppsala University","PhD in Electrical Engineering (AI)","IT",35000,"Rolling",["Signal AI","ML Hardware","Edge Computing"],"https://www.uu.se/en/admissions/doctoral-studies"],
+  ["Chalmers University of Technology","PhD in Mathematics (ML Theory)","Mathematics",35000,"Rolling",["ML Theory","Statistical AI","Optimization"],"https://www.chalmers.se/en/education/phd-studies/phd-mathematics/"],
+  ["KTH Royal Institute of Technology","PhD in Applied Mathematics (ML)","Applied Math",35000,"Rolling",["ML Theory","Optimization","Scientific AI"],"https://www.kth.se/en/studies/phd/applied-and-computational-mathematics-1.685025"],
+  ["Lund University","PhD in Electrical Engineering (AI)","EEI",35000,"Rolling",["Signal AI","ML Hardware","Communications ML"],"https://www.eit.lth.se/english/research/phd-studies/"],
+  ["Stockholm University","PhD in Mathematics (ML)","Mathematics",34000,"Rolling",["Statistical ML","Bayesian AI","Optimization"],"https://www.su.se/english/research/phd-studies"],
+  ["Aalto University","PhD in Mathematics (ML Theory)","Mathematics",36000,"Rolling",["ML Theory","Statistical Learning","Optimization"],"https://www.aalto.fi/en/programmes/aalto-doctoral-programme-in-science/mathematics"],
+  ["University of Helsinki","PhD in Computer Science (ML/AI)","CS / HIIT",30000,"Rolling",["ML","AI","NLP","Computer Vision"],"https://www.helsinki.fi/en/faculty-of-science/doctoral-education"],
+  ["Technical University of Denmark","PhD in Statistics (ML)","DTU Compute",40000,"Rolling",["Statistical ML","Bayesian AI","Time Series ML"],"https://www.dtu.dk/english/education/phd"],
+  ["University of Copenhagen","PhD in Statistics (ML)","Statistics",42000,"Rolling",["Statistical ML","Causal AI","Biostatistics ML"],"https://www.ku.dk/english/research/phd/"],
+  ["Aalborg University","PhD in Mathematics (ML)","Mathematics",40000,"Rolling",["ML Theory","Statistical AI","Optimization"],"https://www.aau.dk/education/phd/"],
+  ["Technion - Israel Institute of Technology","PhD in Electrical Engineering (ML)","EE",22000,"December 1",["Signal AI","ML Hardware","Communications ML"],"https://graduate.technion.ac.il/en/prospective-students/"],
+  ["Technion - Israel Institute of Technology","PhD in Mathematics (ML Theory)","Mathematics",22000,"December 1",["ML Theory","Optimization","Statistical Learning"],"https://math.technion.ac.il/en/graduate/programs/"],
+  ["Weizmann Institute of Science","PhD in Biological Sciences (ML)","Biology/CS",25000,"December 1",["Bioinformatics AI","Genomics ML","Protein ML"],"https://www.weizmann.ac.il/feinberg/admissions"],
+  ["Bar-Ilan University","PhD in Data Science (ML)","Data Science",18000,"December 1",["ML","Data Science","NLP","Bioinformatics AI"],"https://biu.ac.il/en/research/data-science"],
+  ["Korea University","PhD in Brain & Cognitive Engineering (AI)","BCE",15000,"December 1",["Brain-Computer Interfaces","Computational Neuroscience","Neural ML"],"https://bce.korea.ac.kr/en"],
+  ["Yonsei University","PhD in Electrical & Electronic Engineering (ML)","EEE",14000,"December 1",["ML Hardware","Signal Processing AI","Communications ML"],"https://ee.yonsei.ac.kr/en"],
+  ["Tohoku University","PhD in Applied Physics (AI)","Physics/IS",14000,"February 1",["Quantum ML","Scientific AI","Materials AI"],"https://www.tohoku.ac.jp/en/education/graduate/"],
+  ["University of Manchester","PhD in Mathematics (ML Theory)","Mathematics",16500,"January 31",["ML Theory","Statistical Learning","Optimization AI"],"https://www.maths.manchester.ac.uk/study/postgraduate-research/"],
+  ["University of Manchester","PhD in Electrical & Electronic Engineering (ML)","EEE",16500,"January 31",["Signal AI","Communications ML","Edge AI"],"https://www.eee.manchester.ac.uk/study/postgraduate-research/"],
+  ["University of Southern California","PhD in Electrical & Computer Engineering (ML)","ECE",33000,"December 15",["ML Systems","Signal AI","Communications ML"],"https://minghsiehece.usc.edu/academics/phd-program/"],
+  ["Dartmouth College","PhD in Mathematics (ML Theory)","Mathematics",35000,"January 1",["ML Theory","Statistical AI","Optimization"],"https://math.dartmouth.edu/graduate-students/"],
+  ["Washington University in St. Louis","PhD in Electrical & Systems Engineering (ML)","ESE",33000,"December 15",["ML Systems","Signal AI","Biomedical ML"],"https://ese.wustl.edu/Graduate/PhD/"],
+  ["Boston University","PhD in Electrical & Computer Engineering (ML)","ECE",34000,"December 15",["ML Hardware","Signal AI","Communications ML"],"https://www.bu.edu/ece/graduate/phd/"],
+  ["UC Santa Cruz","PhD in Applied Mathematics (ML)","Applied Math",26000,"December 15",["ML Theory","Statistical ML","Optimization","Scientific ML"],"https://www.soe.ucsc.edu/departments/applied-mathematics"],
+  ["Rutgers University","PhD in Electrical & Computer Engineering (AI)","ECE",26000,"December 1",["Signal AI","ML Hardware","Communications ML"],"https://ece.rutgers.edu/graduate/phd"],
+  ["Ohio State University","PhD in Statistics (ML)","Statistics",23000,"December 15",["Statistical ML","Bayesian AI","Computational Statistics"],"https://stat.osu.edu/graduate-studies/phd-program"],
+  ["Indiana University Bloomington","PhD in Statistics (ML)","Statistics",20000,"December 15",["Statistical ML","Bayesian AI","Data Science"],"https://stat.indiana.edu/graduate-programs/phd-statistics.html"],
+  ["Michigan State University","PhD in Electrical & Computer Engineering (AI)","ECE",23000,"December 15",["Signal AI","ML Hardware","Communications ML"],"https://www.egr.msu.edu/graduate/programs/ece"],
+  ["University of Colorado Boulder","PhD in Electrical, Computer & Energy Engineering (ML)","ECEE",27000,"December 15",["ML Systems","Signal AI","Edge Computing"],"https://www.colorado.edu/ecee/graduate-programs/doctoral-degree"],
+  ["University of Massachusetts Amherst","PhD in Statistics (ML)","Statistics",25000,"December 15",["Statistical ML","Bayesian AI","Causal Learning"],"https://www.umass.edu/statistics/graduate/doctoral-program"],
+];
+
+async function run() {
+  let added = 0, skipped = 0;
+  for (const [uniName, progName, dept, stipend, deadline, areas, url] of extras) {
+    const uni = await prisma.university.findFirst({ where: { name: { contains: uniName.split(" (")[0].slice(0,40) } } });
+    if (!uni) { skipped++; continue; }
+    const existing = await prisma.program.findFirst({ where: { universityId: uni.id, name: progName } });
+    if (existing) { skipped++; continue; }
+    await prisma.program.create({
+      data: {
+        universityId: uni.id, name: progName, department: dept, degree: "PhD",
+        fullyFunded: true, stipendUSD: stipend, deadline, greRequired: false,
+        applicationUrl: url, portalType: "Custom", researchAreas: JSON.stringify(areas),
+        annualOpenings: Math.floor(Math.random() * 8) + 2,
+        acceptanceRate: parseFloat((Math.random() * 8 + 2).toFixed(1)),
+      }
+    });
+    added++;
+  }
+  const total = await prisma.program.count();
+  const unis = await prisma.university.count();
+  console.log(`Added ${added} (skipped ${skipped}). Total: ${total} programs across ${unis} universities.`);
+}
+run().catch(console.error).finally(() => prisma.$disconnect());

@@ -1,0 +1,37 @@
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# environment files
+.env
+.env.local
+.env*.local
+
+# uploaded documents
+public/docs/
+public/uploads/
+
+# logs
+logs/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+automation/venv/
+automation/.venv/
+
+# SQLite (legacy)
+*.db
+*.db-journal
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/

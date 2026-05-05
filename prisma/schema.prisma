@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model University {
+  id          String    @id @default(cuid()) @map("_id")
+  name        String
+  country     String
+  city        String
+  qsRanking   Int?
+  website     String?
+  logoUrl     String?
+  programs    Program[]
+  createdAt   DateTime  @default(now())
+}
+
+model Program {
+  id               String        @id @default(cuid()) @map("_id")
+  universityId     String
+  university       University    @relation(fields: [universityId], references: [id])
+  name             String
+  department       String
+  degree           String        @default("PhD")
+  fullyFunded      Boolean       @default(true)
+  stipendUSD       Int?
+  deadline         String
+  deadlineDate     DateTime?
+  duration         String        @default("4-5 years")
+  greRequired      Boolean       @default(false)
+  toeflMin         Int?
+  ieltsMin         Float?
+  applicationUrl   String
+  portalType       String?
+  researchAreas    String        // JSON array stored as string
+  notableFaculty   String?
+  acceptanceRate   Float?
+  annualOpenings   Int?
+  description      String?
+  applications     Application[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model UserProfile {
+  id                String         @id @default(cuid()) @map("_id")
+  email             String         @unique
+  firstName         String
+  lastName          String
+  phone             String?
+  nationality       String?
+  dateOfBirth       String?
+  address           String?
+  city              String?
+  country           String?
+  linkedin          String?
+  github            String?
+  website           String?
+  undergradUniv     String?
+  undergradDegree   String?
+  undergradGPA      Float?
+  undergradYear     Int?
+  masterUniv        String?
+  masterDegree      String?
+  masterGPA         Float?
+  masterYear        Int?
+  greVerbal         Int?
+  greQuant          Int?
+  greAWA            Float?
+  toeflScore        Int?
+  ieltsScore        Float?
+  publications      String?
+  researchExp       String?
+  interestedAreas   String?       // JSON array
+  workExperience    String?
+  skills            String?
+  awards            String?
+  documents         Document[]
+  applications      Application[]
+  statements        Statement[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model Document {
+  id          String      @id @default(cuid()) @map("_id")
+  userId      String
+  user        UserProfile @relation(fields: [userId], references: [id])
+  type        String      // cv, transcript, sop, lor, photo, gre_score, toefl_score, other
+  name        String
+  fileName    String
+  filePath    String
+  fileSize    Int
+  mimeType    String
+  isDefault   Boolean     @default(false)
+  uploadedAt  DateTime    @default(now())
+}
+
+model Statement {
+  id          String      @id @default(cuid()) @map("_id")
+  userId      String
+  user        UserProfile @relation(fields: [userId], references: [id])
+  type        String      // sop, personal_statement, research_statement, diversity
+  title       String
+  content     String
+  wordCount   Int         @default(0)
+  isDefault   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Application {
+  id              String      @id @default(cuid()) @map("_id")
+  userId          String
+  user            UserProfile @relation(fields: [userId], references: [id])
+  programId       String
+  program         Program     @relation(fields: [programId], references: [id])
+  status          String      @default("saved")
+  submittedAt     DateTime?
+  lastUpdated     DateTime    @updatedAt
+  notes           String?
+  portalUsername  String?
+  portalPassword  String?
+  automationLog   String?
+  interviewDate   DateTime?
+  decisionDate    DateTime?
+  priority        Int         @default(3)
+  createdAt       DateTime    @default(now())
+
+  @@unique([userId, programId])
+}

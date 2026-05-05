@@ -79,6 +79,7 @@ model UserProfile {
   workExperience    String?
   skills            String?
   awards            String?
+  passwordHash      String?
   documents         Document[]
   applications      Application[]
   statements        Statement[]

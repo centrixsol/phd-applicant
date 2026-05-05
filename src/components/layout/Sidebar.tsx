@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import {
-  GraduationCap, LayoutDashboard, Search, User, FileText, Send, BookOpen, Sparkles,
+  GraduationCap, LayoutDashboard, Search, User, FileText, Send, BookOpen, Sparkles, LogOut,
 } from "lucide-react";
 
 const navItems = [
@@ -17,6 +18,7 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <aside className="w-64 min-h-screen bg-slate-900 text-white flex flex-col">
@@ -50,7 +52,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-slate-700">
+      <div className="p-4 space-y-3 border-t border-slate-700">
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-4 h-4 text-yellow-300" />
@@ -61,6 +63,22 @@ export default function Sidebar() {
             Start Applying
           </Link>
         </div>
+
+        {session?.user && (
+          <div className="flex items-center justify-between px-1">
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-slate-300 truncate">{session.user.name}</p>
+              <p className="text-xs text-slate-500 truncate">{session.user.email}</p>
+            </div>
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="ml-2 flex-shrink-0 p-1.5 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors"
+              title="Sign out"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   );

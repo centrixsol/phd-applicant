@@ -6,6 +6,8 @@ A full-stack web app to browse, track, and auto-submit PhD applications — buil
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js) ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb) ![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?logo=prisma) ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python) ![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)
 
+![PhD Applicant Dashboard](docs/screenshot.png)
+
 ---
 
 ## Features

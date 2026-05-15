@@ -18,7 +18,7 @@ app = FastAPI(title="PhD Apply Automation", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000", "http://localhost:8888"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -162,6 +162,31 @@ async def apply(request: ApplicationRequest):
 
     except Exception as e:
         log(f"ERROR: {str(e)}")
+        raise HTTPException(status_code=500, detail={"error": str(e), "log": "\n".join(log_lines)})
+
+
+@app.post("/crawl")
+async def crawl_varbi(max_universities: int = 14):
+    """Crawl all Varbi university portals and return ML/AI/Quantum PhD positions."""
+    log_lines = []
+
+    def log(msg: str):
+        ts = datetime.now().isoformat()
+        line = f"[{ts}] {msg}"
+        log_lines.append(line)
+        logger.info(line)
+
+    try:
+        from varbi_crawler import crawl_all
+        positions = await crawl_all(log=log, max_universities=max_universities)
+        return {
+            "status": "ok",
+            "count": len(positions),
+            "positions": positions,
+            "log": "\n".join(log_lines),
+        }
+    except Exception as e:
+        logger.error(f"Crawl error: {e}")
         raise HTTPException(status_code=500, detail={"error": str(e), "log": "\n".join(log_lines)})
 
 

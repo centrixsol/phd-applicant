@@ -114,6 +114,25 @@ model Statement {
   updatedAt   DateTime    @updatedAt
 }
 
+model VarbiPosition {
+  id              String   @id @default(cuid()) @map("_id")
+  jobId           String
+  universityCode  String
+  title           String
+  university      String
+  city            String
+  qsRanking       Int?
+  applicationUrl  String
+  deadline        String?
+  description     String?
+  department      String?
+  researchAreas   String   // JSON array
+  stipendUSD      Int?
+  scrapedAt       DateTime @default(now())
+
+  @@unique([universityCode, jobId])
+}
+
 model Application {
   id              String      @id @default(cuid()) @map("_id")
   userId          String

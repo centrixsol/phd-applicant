@@ -1,10 +1,10 @@
 import AppLayout from "@/components/layout/AppLayout";
-import ProgramsContent from "./ProgramsContent";
+import ProgramsPageClient from "./ProgramsPageClient";
 
 export default function ProgramsPage() {
   return (
     <AppLayout>
-      <ProgramsContent />
+      <ProgramsPageClient />
     </AppLayout>
   );
 }

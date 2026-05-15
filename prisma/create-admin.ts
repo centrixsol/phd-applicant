@@ -2,25 +2,26 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
-const EMAIL = "bacvml@gmail.com";
 
 async function main() {
-  const password = process.argv[2] || process.env.ADMIN_PASSWORD;
-  if (!password) {
-    console.error("Usage: tsx prisma/create-admin.ts <password>");
-    console.error("   or: ADMIN_PASSWORD=... tsx prisma/create-admin.ts");
+  const email = process.argv[2] || process.env.USER_EMAIL || process.env.PORTAL_USERNAME;
+  const password = process.argv[3] || process.env.PORTAL_PASSWORD || process.env.ADMIN_PASSWORD;
+
+  if (!email || !password) {
+    console.error("Usage: tsx prisma/create-admin.ts <email> <password>");
+    console.error("   or: set USER_EMAIL and PORTAL_PASSWORD in .env");
     process.exit(1);
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
 
-  await prisma.userProfile.upsert({
-    where: { email: EMAIL },
+  const user = await prisma.userProfile.upsert({
+    where: { email },
     update: { passwordHash },
-    create: { email: EMAIL, firstName: "PhD", lastName: "Applicant", passwordHash },
+    create: { email, firstName: "Babar", lastName: "Ali", passwordHash },
   });
 
-  console.log(`✅ User ${EMAIL} created/updated in database`);
+  console.log(`✅ User ${user.email} (id: ${user.id}) created/updated in database`);
 }
 
 main().finally(() => prisma.$disconnect());

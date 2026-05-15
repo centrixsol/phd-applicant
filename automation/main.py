@@ -52,6 +52,11 @@ class ApplicantInfo(BaseModel):
     master_university: Optional[str] = None
     master_degree: Optional[str] = None
     master_gpa: Optional[float] = None
+    master_year: Optional[int] = None
+    motivation_letter: Optional[str] = None
+    cover_letter: Optional[str] = None
+    personal_statement: Optional[str] = None
+    website: Optional[str] = None
     gre_verbal: Optional[int] = None
     gre_quant: Optional[int] = None
     gre_awa: Optional[float] = None
@@ -112,7 +117,14 @@ async def apply(request: ApplicationRequest):
     try:
         portal = (request.program.portal_type or "").lower()
 
-        if "applyyourself" in portal or "apply yourself" in portal:
+        if "varbi" in portal:
+            log("Using Varbi automation handler (Swedish university portal)")
+            result = await engine.apply_varbi(
+                request.program.application_url,
+                request.portal_credentials,
+                log
+            )
+        elif "applyyourself" in portal or "apply yourself" in portal:
             log("Using ApplyYourself automation handler")
             result = await engine.apply_applyyourself(
                 request.program.application_url,

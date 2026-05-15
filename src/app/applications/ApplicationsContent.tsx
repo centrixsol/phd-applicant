@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Send, Trash2, Zap, MapPin, DollarSign, Calendar, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { Send, Trash2, Zap, MapPin, DollarSign, Calendar, AlertCircle, CheckCircle, Loader2, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getStatusColor, getStatusLabel, formatStipend } from "@/lib/utils";
+import AiAssistDialog from "@/components/AiAssistDialog";
 
 interface Application {
   id: string;
@@ -142,9 +143,18 @@ export default function ApplicationsContent() {
                     </div>
                     <p className="text-sm text-gray-600 mb-2">{app.program.name}</p>
                     <div className="flex flex-wrap gap-3 text-xs text-gray-500">
-                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{app.program.university.city}, {app.program.university.country}</span>
-                      <span className="flex items-center gap-1 text-green-600 font-medium"><DollarSign className="w-3 h-3" />{formatStipend(app.program.stipendUSD)}</span>
-                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />Deadline: {app.program.deadline}</span>
+                      <span className="flex items-center gap-1">
+                        {app.program.university.country === "Sweden" && <span>🇸🇪</span>}
+                        <MapPin className="w-3 h-3" />{app.program.university.city}, {app.program.university.country}
+                      </span>
+                      {app.program.university.country === "Sweden" ? (
+                        <span className="flex items-center gap-1 text-blue-600 font-medium">
+                          <Briefcase className="w-3 h-3" />Employed · {formatStipend(app.program.stipendUSD)}
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1 text-green-600 font-medium"><DollarSign className="w-3 h-3" />{formatStipend(app.program.stipendUSD)}</span>
+                      )}
+                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{app.program.deadline === "Rolling" ? "Rolling" : `Deadline: ${app.program.deadline}`}</span>
                     </div>
                     {app.submittedAt && (
                       <p className="text-xs text-gray-400 mt-1">Submitted: {new Date(app.submittedAt).toLocaleDateString()}</p>
@@ -162,6 +172,13 @@ export default function ApplicationsContent() {
                         ))}
                       </SelectContent>
                     </Select>
+
+                    <AiAssistDialog
+                      applicationId={app.id}
+                      programId={app.program.id}
+                      programName={app.program.name}
+                      universityName={app.program.university.name}
+                    />
 
                     <Button
                       size="sm"

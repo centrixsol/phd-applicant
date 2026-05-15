@@ -20,9 +20,11 @@ interface Statement {
 }
 
 const STATEMENT_TYPES = [
+  { value: "motivation_letter", label: "Motivation Letter (Sweden)", max: 800 },
   { value: "sop", label: "Statement of Purpose (SOP)", max: 1000 },
   { value: "personal_statement", label: "Personal Statement", max: 800 },
   { value: "research_statement", label: "Research Statement", max: 1500 },
+  { value: "research_proposal", label: "Research Proposal", max: 600 },
   { value: "diversity", label: "Diversity Statement", max: 500 },
 ];
 

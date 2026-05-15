@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-const DEFAULT_EMAIL = "bacvml@gmail.com";
+const DEFAULT_EMAIL = process.env.USER_EMAIL || "babar-alii@outlook.com";
 
 export async function POST(req: NextRequest) {
   const { applicationId } = await req.json();
 
-  const user = await prisma.userProfile.findUnique({ where: { email: DEFAULT_EMAIL }, include: { documents: true } });
+  const user = await prisma.userProfile.findUnique({ where: { email: DEFAULT_EMAIL }, include: { documents: true, statements: true } });
   if (!user) return NextResponse.json({ error: "Profile not found" }, { status: 404 });
 
   const application = await prisma.application.findUnique({
@@ -68,6 +68,8 @@ export async function POST(req: NextRequest) {
         master_university: user.masterUniv,
         master_degree: user.masterDegree,
         master_gpa: user.masterGPA,
+        master_year: user.masterYear,
+        website: user.website,
         gre_verbal: user.greVerbal,
         gre_quant: user.greQuant,
         gre_awa: user.greAWA,
@@ -79,10 +81,15 @@ export async function POST(req: NextRequest) {
         work_experience: user.workExperience,
         skills: user.skills,
         awards: user.awards,
+        motivation_letter: user.statements.find((s) => s.type === "motivation_letter" && s.title.includes(application.program.university.name))?.content
+          || user.statements.find((s) => s.type === "sop" && s.isDefault)?.content
+          || null,
+        cover_letter: user.statements.find((s) => s.type === "sop")?.content || null,
+        personal_statement: user.statements.find((s) => s.type === "personal_statement")?.content || null,
       },
       portal_credentials: {
-        username: application.portalUsername,
-        password: application.portalPassword,
+        username: application.portalUsername || process.env.PORTAL_USERNAME || "",
+        password: application.portalPassword || process.env.PORTAL_PASSWORD || "",
       },
       documents: user.documents.map((d) => ({
         type: d.type,

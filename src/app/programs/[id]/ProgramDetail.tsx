@@ -1,11 +1,12 @@
 "use client";
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
-import { MapPin, DollarSign, Calendar, Globe, ArrowLeft, Plus, ExternalLink, Users, Percent } from "lucide-react";
+import { MapPin, DollarSign, Calendar, Globe, ArrowLeft, Plus, ExternalLink, Users, Percent, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatStipend } from "@/lib/utils";
+import AiAssistDialog from "@/components/AiAssistDialog";
 
 interface Program {
   id: string;
@@ -64,19 +65,34 @@ export default function ProgramDetail({ paramsPromise }: { paramsPromise: Promis
         </Link>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              {program.university.country === "Sweden" && <span className="text-lg">🇸🇪</span>}
               {program.university.qsRanking && (
                 <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">
                   QS #{program.university.qsRanking}
                 </span>
               )}
-              <Badge variant="success">Fully Funded</Badge>
+              {program.university.country === "Sweden" ? (
+                <Badge className="bg-blue-100 text-blue-700 border-blue-200">
+                  <Briefcase className="w-3 h-3 mr-1" />Employed
+                </Badge>
+              ) : (
+                <Badge variant="success">Fully Funded</Badge>
+              )}
+              {!program.greRequired && (
+                <Badge variant="outline" className="text-green-600 border-green-300">No GRE</Badge>
+              )}
             </div>
             <h1 className="text-3xl font-bold text-gray-900">{program.university.name}</h1>
             <p className="text-xl text-gray-600 mt-1">{program.name}</p>
             <p className="text-gray-500 text-sm mt-1">{program.department} · {program.degree} · {program.duration}</p>
           </div>
-          <div className="flex gap-2 flex-shrink-0">
+          <div className="flex gap-2 flex-shrink-0 flex-wrap">
+            <AiAssistDialog
+              programId={program.id}
+              programName={program.name}
+              universityName={program.university.name}
+            />
             <a href={program.applicationUrl} target="_blank" rel="noopener noreferrer">
               <Button variant="outline">
                 <ExternalLink className="w-4 h-4 mr-1" /> Visit Portal

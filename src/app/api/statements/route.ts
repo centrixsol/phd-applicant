@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-const DEFAULT_EMAIL = "bacvml@gmail.com";
+const DEFAULT_EMAIL = process.env.USER_EMAIL || "babar-alii@outlook.com";
 
 async function ensureUser() {
   return prisma.userProfile.upsert({

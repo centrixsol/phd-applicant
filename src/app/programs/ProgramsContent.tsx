@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { Search, MapPin, DollarSign, Calendar, BookOpen, Plus, Filter, X } from "lucide-react";
+import { Search, MapPin, DollarSign, Calendar, BookOpen, Plus, Filter, X, Briefcase } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,8 +18,26 @@ interface Program {
   researchAreas: string[];
   annualOpenings: number | null;
   acceptanceRate: number | null;
+  portalType: string | null;
   university: { id: string; name: string; country: string; city: string; qsRanking: number | null };
 }
+
+const SWEDEN_UNIVERSITIES_ORDER = [
+  "Karolinska Institute",
+  "KTH Royal Institute of Technology",
+  "Uppsala University",
+  "Lund University",
+  "Stockholm University",
+  "Chalmers University of Technology",
+  "University of Gothenburg",
+  "Linköping University",
+  "Umeå University",
+  "Örebro University",
+  "Malmö University",
+  "Mid Sweden University",
+  "Jönköping University",
+  "Halmstad University",
+];
 
 export default function ProgramsContent() {
   const [programs, setPrograms] = useState<Program[]>([]);
@@ -28,7 +46,7 @@ export default function ProgramsContent() {
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [country, setCountry] = useState("all");
+  const [country, setCountry] = useState("Sweden");
   const [area, setArea] = useState("all");
   const [saving, setSaving] = useState<string | null>(null);
   const [saved, setSaved] = useState<Set<string>>(new Set());
@@ -76,12 +94,44 @@ export default function ProgramsContent() {
     fetchPrograms();
   }
 
+  const isSweden = country === "Sweden";
+
   return (
     <div className="p-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">PhD Programs</h1>
-        <p className="text-gray-500 mt-1">{total} fully-funded ML & AI programs worldwide</p>
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+          <span>🇸🇪</span> PhD Programs in Sweden
+        </h1>
+        <p className="text-gray-500 mt-1">
+          {total} fully-funded PhD positions — all are employment contracts with full salary
+        </p>
       </div>
+
+      {/* Sweden Info Banner */}
+      {isSweden && (
+        <div className="mb-6 bg-gradient-to-r from-blue-50 to-yellow-50 border border-blue-200 rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl flex-shrink-0">🇸🇪</span>
+            <div>
+              <p className="font-semibold text-gray-800 mb-1">Why Sweden for your PhD?</p>
+              <div className="grid md:grid-cols-3 gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-1.5">
+                  <Briefcase className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+                  <span>Fully employed — salary, not scholarship</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <DollarSign className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
+                  <span>~28,000–38,000 SEK/month tax-free net</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />
+                  <span>4 years · No GRE required</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Search & Filters */}
       <div className="mb-6 space-y-3">
@@ -109,7 +159,8 @@ export default function ProgramsContent() {
                 <SelectTrigger><SelectValue placeholder="All Countries" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Countries</SelectItem>
-                  {COUNTRIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  <SelectItem value="Sweden">🇸🇪 Sweden (Featured)</SelectItem>
+                  {COUNTRIES.filter((c) => c !== "Sweden").map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
@@ -123,10 +174,10 @@ export default function ProgramsContent() {
                 </SelectContent>
               </Select>
             </div>
-            {(country !== "all" || area !== "all") && (
+            {(country !== "Sweden" || area !== "all") && (
               <div className="flex items-end">
-                <Button variant="ghost" size="sm" onClick={() => { setCountry("all"); setArea("all"); setPage(1); }}>
-                  <X className="w-4 h-4 mr-1" /> Clear
+                <Button variant="ghost" size="sm" onClick={() => { setCountry("Sweden"); setArea("all"); setPage(1); }}>
+                  <X className="w-4 h-4 mr-1" /> Reset
                 </Button>
               </div>
             )}
@@ -144,18 +195,21 @@ export default function ProgramsContent() {
       ) : (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
           {programs.map((program) => (
-            <Card key={program.id} className="hover:shadow-md transition-shadow">
+            <Card key={program.id} className="hover:shadow-md transition-shadow border hover:border-blue-200">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 text-sm leading-tight mb-0.5 line-clamp-2">
-                      {program.university.name}
-                    </p>
+                    <div className="flex items-center gap-1 mb-0.5">
+                      {program.university.country === "Sweden" && <span className="text-sm">🇸🇪</span>}
+                      <p className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2">
+                        {program.university.name}
+                      </p>
+                    </div>
                     <p className="text-xs text-gray-500 truncate">{program.name}</p>
                   </div>
                   {program.university.qsRanking && (
                     <span className="ml-2 text-xs bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded-full flex-shrink-0">
-                      #{program.university.qsRanking}
+                      QS #{program.university.qsRanking}
                     </span>
                   )}
                 </div>
@@ -166,13 +220,25 @@ export default function ProgramsContent() {
                     {program.university.city}, {program.university.country}
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                    <DollarSign className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
-                    <span className="text-green-700 font-medium">{formatStipend(program.stipendUSD)}</span>
+                    <Briefcase className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <span className="text-blue-700 font-medium">
+                      {program.university.country === "Sweden" ? "Employed (salary)" : "Fully Funded"}
+                    </span>
+                    {program.stipendUSD && (
+                      <span className="text-green-700 font-medium">· {formatStipend(program.stipendUSD)}</span>
+                    )}
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-gray-600">
                     <Calendar className="w-3.5 h-3.5 text-orange-400 flex-shrink-0" />
-                    Deadline: {program.deadline}
+                    {program.deadline === "Rolling" ? "Rolling Admissions" : `Deadline: ${program.deadline}`}
                   </div>
+                  {program.portalType && (
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                      <span className="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono text-xs">
+                        {program.portalType}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap gap-1 mb-3">
@@ -211,6 +277,19 @@ export default function ProgramsContent() {
         </div>
       )}
 
+      {programs.length === 0 && !loading && (
+        <div className="text-center py-16 text-gray-400">
+          <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
+          <p className="text-lg">No programs found</p>
+          <p className="text-sm mt-1">Try adjusting your search or filters</p>
+          {country === "Sweden" && (
+            <p className="text-sm mt-2 text-blue-500">
+              Swedish programs may need to be seeded — run: <code className="bg-gray-100 px-1 rounded">npm run db:seed:sweden</code>
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Pagination */}
       {pages > 1 && (
         <div className="mt-8 flex items-center justify-center gap-2">
@@ -218,6 +297,13 @@ export default function ProgramsContent() {
           <span className="text-sm text-gray-600">Page {page} of {pages}</span>
           <Button variant="outline" size="sm" disabled={page === pages} onClick={() => setPage(page + 1)}>Next</Button>
         </div>
+      )}
+
+      {/* Sweden ranking note */}
+      {isSweden && programs.length > 0 && (
+        <p className="mt-6 text-xs text-center text-gray-400">
+          Programs ranked from top-ranked to less-ranked Swedish universities · All positions are fully funded employment contracts
+        </p>
       )}
     </div>
   );

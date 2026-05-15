@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
-const DEFAULT_EMAIL = "bacvml@gmail.com";
+const DEFAULT_EMAIL = process.env.USER_EMAIL || "babar-alii@outlook.com";
 
 async function ensureUser() {
   return prisma.userProfile.upsert({
